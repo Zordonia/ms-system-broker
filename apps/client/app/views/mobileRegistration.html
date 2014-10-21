@@ -1,0 +1,49 @@
+<form class="form-horizontal" role="form">
+  <!-- Name input-->
+  <div class="form-group">
+    <label for="inputName" class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-4">
+      <input class="form-control" id="inputName" placeholder="Name">
+    </div>
+  </div>
+  <!-- ID input -->
+  <div class="form-group">
+    <label for="inputIdentifier" class="col-sm-3 control-label">Identifier</label>
+    <div clss="col-sm-5">
+      <input class="form-control" id="inputIdentifier" placeholder="ID">
+    </div>
+  </div>
+  <!-- Authenticating Information Input -->
+  <div class="form-group">
+    <label for="inputAuthentication" class="col-sm-3 control-label">Authentication</label>
+    <div class="col-sm-5">
+      <input class="form-control" id="inputAuthentication" placeholder="Authentication">
+    </div>
+  </div>
+  <!-- Type Input -->
+  <div class="col-sm-5 btn-group">
+      <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Type
+        <span class="caret"></span>
+      </button>
+    <ul class="dropdown-menu">
+      <li ng-repeat="type in options.types">
+        <a>{{type.name}}</a>
+      </li>
+    </ul>
+  </div>
+</form>
+
+
+<table ng-table class="table" template-header="ng-table_se_header">
+  <tr ng-repeat="data in datas">
+    <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field"> {{data[column.field]}}
+    </td>
+  </tr>
+</table>
+
+<script id="ng-table_se_header" type="text/ng-template">
+<tr>
+  <th ng-repeat="column in columns" ng-show="column.visible" class="sortable text-center">{{column.title}}
+  </th>
+</tr>
+</script>

@@ -5,7 +5,8 @@ angular
     'ngCookies',
     'ngSanitize',
     'ngRoute',
-    'ui.router'
+    'ui.router',
+    'ngTable'
   ])
   .config(function ($urlRouterProvider, $stateProvider) {
     $urlRouterProvider.otherwise('/main');
@@ -17,6 +18,26 @@ angular
           '@': {
             templateUrl: 'views/main.html',
             controller: 'MainCtrl'
+          }
+        }
+      });
+    $stateProvider
+      .state('se', {
+        url: '/system-endpoint',
+        views: {
+          '@': {
+            templateUrl: 'views/systemEndpoint.html',
+            controller: 'SystemEndpointCtrl'
+          }
+        }
+      });
+    $stateProvider
+      .state('mr', {
+        url: '/mobile-registration',
+        views: {
+          '@': {
+            templateUrl: 'views/mobileRegistration.html',
+            controller: 'MobileRegistrationCtrl'
           }
         }
       });

@@ -1,7 +1,8 @@
 'use strict';
 
 var express, app, logger, compression,
-  methodOverride, config, auth, allowCrossOrigin, url, bodyParser;
+  methodOverride, config, auth, allowCrossOrigin, url, bodyParser,
+  sqsMobile, sqsSystem;
 
 // Create express application
 express = require('express');
@@ -36,12 +37,20 @@ app.use(auth.ensureSession());
 // Body Parser will be used to view JSON request bodies.
 app.use(bodyParser.json());
 
+// SQS Mobile Endpoint Consumer
+sqsMobile = require('./controllers/pubsub/mobile_subscriber.js');
+sqsMobile.start();
+
+// SQS Mobile Endpoint Consumer
+sqsSystem = require('./controllers/pubsub/system_endpoint_subscriber.js');
+sqsSystem.start(1000);
+
 // API endpoints
-var system_endpoint;
-system_endpoint = require('./controllers/system_endpoint.js');
+var broker;
+broker = require('./controllers/broker.js');
 
 // Set up API calls
-app.all('/system*', system_endpoint);
+app.all('/broker*', broker);
 
 app.use(function errorHandler (err, req, res, next) {
   var e = { error: err };

@@ -4,7 +4,7 @@ var Q, config, logger;
 
 Q = require('q');
 config = require('../utils/config.js');
-logger = require('../utils/logger');
+logger = require('../utils/logger').prefix('AUTHENTICATION');
 
 var request_token = config.TOKEN;
 

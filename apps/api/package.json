@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "JSON2": "^0.1.0",
+    "aws-sdk": "^2.0.23",
     "body-parser": "^1.9.0",
     "compression": "~1.0.1",
     "elasticsearch": "^2.4.3",

@@ -3,7 +3,7 @@
 var Q, logger, restler, url, config, querystring, _;
 
 Q = require('q');
-logger = require('../utils/logger');
+logger = require('../utils/logger').prefix('BROKER');
 restler = require('restler-q');
 url = require('url');
 config = require('../utils/config.js');

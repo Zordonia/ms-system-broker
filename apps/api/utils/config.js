@@ -15,8 +15,8 @@ config = {
   MOBILEENDPOINT_QUEUE_URL: env.MOBILEENDPOINT_QUEUE_URL || 'https://sqs.us-west-2.amazonaws.com/036845378506/Mobile_Endpoint_Publication_Unfiltered',
   SYSTEMENDPOINT_QUEUE_URL: env.SYSTEMENDPOINT_QUEUE_URL || 'https://sqs.us-west-2.amazonaws.com/036845378506/System_Broker_Endpoint_Notifications',
   NOTIFICATION_URL: env.NOTIFICATION_URL || 'https://sqs.us-west-2.amazonaws.com/036845378506/Mobile_Endpoint_Publication_Filtered',
-  AWS_ACCESSKEYID: 'AKIAIIP6TNYSLPJ5I4UA',
-  AWS_SECRETACCESSKEY: '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',
+  AWS_ACCESSKEYID: '',
+  AWS_SECRETACCESSKEY: '',
   SNS_ARN: env.SNS_ARN || 'arn:aws:sns:us-west-2:036845378506:Mobile_Publication_Filtered'
 };
 

@@ -2,12 +2,14 @@
 
 var Q, logger, config, AWS, sqs, checkQueue, deleteMessage,
   run, processMessageBatch, processMessageRetrievalFailure,
-  processMessage, publisher;
+  processMessage, publisher, elasticsearch;
 
 logger = require('../../utils/logger.js').prefix('SUBSCRIBER.SYSTEM');
 Q = require('q');
 publisher = require('./publisher.js');
 config = require('../../utils/config.js');
+elasticsearch = require('../elasticsearch/elasticsearch.js');
+
 AWS = require('aws-sdk');
 sqs = new AWS.SQS({
   region: 'us-west-2',
@@ -39,19 +41,25 @@ deleteMessage = function (receiptHandle) {
 };
 
 processMessage = function (message) {
-  logger.debug.write('Processing message: ' + message.Body);
+  logger.debug.write('Processing message.');
+  var messageJSON;
+  try {
+    message.Body = JSON.parse(message.Body);
+    messageJSON = JSON.parse(message.Body.Message);
+  }
+  catch (e) {
+    logger.error.write(e.message);
+  }
   var receipt;
   receipt = message.ReceiptHandle;
-  // TODO: Process message
-  Q(message)
-    .then( function () {
-      logger.debug.write('Message processed: ' + message.Body);
+  elasticsearch.saveSystemMessage(messageJSON)
+    .then(function (result) {
+      logger.debug.write('Message processed: ' + JSON.stringify(result));
       deleteMessage(receipt);
-    },
-    function (err) {
-      logger.error.write(err);
-    }
-  );
+    }, function (error) {
+      logger.error.write(error);
+      return error;
+    });
 };
 
 processMessageBatch = function (data) {
@@ -72,7 +80,7 @@ processMessageRetrievalFailure = function (error) {
 run = function () {
   checkQueue()
     .then(processMessageBatch, processMessageRetrievalFailure)
-    .delay(5000)
+    .delay(config.POLL_DELAY)
     .finally(run);
 };
 

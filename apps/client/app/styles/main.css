@@ -1,3 +1,11 @@
 .ng-table {
     border: 1px solid #000;
 }
+
+.info-panel {
+  margin: 10px;
+}
+
+.page-header {
+  margin-left: 10px;
+}

@@ -1,13 +1,21 @@
-<table ng-table class="table" template-header="ng-table_se_header">
-  <tr ng-repeat="epLog in epLogs">
-    <th data-title="{{prop}}" ng-repeat="(prop, val) in epLog"> {{epLog[prop]}}</td>
-  </tr>
-</table>
+<div class="page-header">
+    <h1><span></span>System Endpoint Simulations</h1>
+</div>
+<div class="info-panel">
+  <table ng-table class="table table-striped table-bordered table-hover">
+    <tr>
+      <th ng-repeat="column in columns" ng-show="column.visible" class="sortable text-center" ng-click="tableParams.sorting(column.field, tableParams.isSortBy(column.field, 'asc') ? 'desc' : 'asc')">{{column.title}}
+      </th>
+    </tr>
+    <tr ng-class="{success: newData(epLog)}"  class="highlight" ng-repeat="epLog in epLogs">
+      <td data-title="{{column.title}}" ng-repeat="column in columns"> {{epLog[column.field]}}</td>
+    </tr>
+  </table>
+</div>
 
 <script id="ng-table_se_header" type="text/ng-template">
-<tr>
-  <th ng-repeat="column in columns" ng-show="column.visible" class="sortable text-center"
-    ng-click="tableParams.sorting(column.field, tableParams.isSortBy(column.field, 'asc') ? 'desc' : 'asc'">{{column.title}}
-  </th>
-</tr>
+  <tr>
+    <th ng-repeat="column in columns" ng-show="column.visible" class="sortable text-center" ng-click="tableParams.sorting(column.field, tableParams.isSortBy(column.field, 'asc') ? 'desc' : 'asc')">{{column.title}}
+    </th>
+  </tr>
 </script>

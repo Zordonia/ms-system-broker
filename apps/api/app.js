@@ -43,7 +43,7 @@ sqsMobile.start();
 
 // SQS Mobile Endpoint Consumer
 sqsSystem = require('./controllers/pubsub/system_endpoint_subscriber.js');
-sqsSystem.start(1000);
+sqsSystem.start(10000);
 
 // API endpoints
 var broker;

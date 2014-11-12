@@ -52,7 +52,7 @@ angular.module('serviceBrokerApp')
             };
           });
         }
-        timeout(searchES, 5000);
+        timeout(searchES, 1000);
       });
     }
     searchES();

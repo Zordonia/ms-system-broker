@@ -11,6 +11,7 @@
     "elasticsearch": "^2.4.3",
     "express": "~4.0.0",
     "express-enrouten": "~0.3.0",
+    "gps-distance": "0.0.3",
     "http-proxy": "^1.1.5",
     "json-stable-stringify": "^1.0.0",
     "lodash": "^2.4.1",

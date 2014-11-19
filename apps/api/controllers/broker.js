@@ -124,6 +124,7 @@ module.exports.subscribe_mobile_to_system = function (req, res) {
       logger.debug.write('Retrieving endpoint subscriptions.');
       // Get one subscription
       if (req.params.systemId && req.params.mobileId) {
+        logger.debug.write('Verifying mobile subscription to system.');
         subscriptions.getMobileSubscriptions(req.params.mobileId)
           .then(function (systemEndpoints) {
             logger.debug.write(systemEndpoints);
@@ -132,11 +133,17 @@ module.exports.subscribe_mobile_to_system = function (req, res) {
       }
       // Get all mobile endpoints subscribed to the specified system.
       if (req.params.systemId && !req.params.mobileId){
+        logger.debug.write('Retrieving system subscriptions.');
         subscriptions.getSystemSubscriptions(req.params.systemId)
+          .then(function (subscriptions) {
+            logger.debug.write(subscriptions);
+            return subscriptions;
+          })
           .then(messageHandler(res), errorHandler(res));
       }
       // Get all system endpoints subscribed to the specified mobile.
       if (req.params.mobileId && !req.params.systemId){
+        logger.debug.write('Retrieving mobile subscriptions.');
         subscriptions.getMobileSubscriptions(req.params.mobileId)
           .then(messageHandler(res), errorHandler(res));
       }

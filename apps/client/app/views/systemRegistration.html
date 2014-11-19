@@ -68,12 +68,31 @@
 <div class="row">
   <div class="col-md-1"/>
   <div class="col-md-10">
-  <table ng-table class="table" template-header="ng-table_se_header">
-    <tr ng-repeat="data in datas">
-      <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field"> {{getFieldValue(data, column.field)}}
-      <button ng-show="column.btn" ng-click="delete($parent.$index)"><strong>{{column.btn_txt}}</strong></button>
-      </td>
-    </tr>
+  <table ng-table="tableParams" class="table" template-header="ng-table_se_header">
+    
+        <tbody ng-repeat="group in $groups">
+            <tr class="ng-table-group">
+              <td align="right" ng-repeat="column in columns" ng-show="column.visible" sortable="column.field" class="info">
+                <button ng-show="column.btn == 0 && group.data[0].subscriptions.length > 0" ng-click="group.$hideRows = !group.$hideRows">
+                  <strong>{{column.btn_txt}}</strong>
+                </button>
+              <div ng-show="$index != 0">
+                {{getFieldValue(group.data[0], column.field)}}
+              </div>              
+              <button ng-show="column.btn == 7" ng-click="delete($parent.$index)">
+                <strong>{{column.btn_txt}}</strong>
+              </button>
+              </td>
+            </tr>
+            <tr ng-hide="group.$hideRows" ng-repeat="subs in group.data[0].subscriptions">
+                <td colspan="{{column.span || 1}}" align="right" ng-repeat="column in sub_columns" ng-show="column.visible" sortable="column.field" class="success"> 
+                <div ng-show="$index != 0">
+                  {{getFieldValue(subs, column.field)}}
+                </div>
+              <button ng-show="column.btn" ng-click="deleteSub($parent.$parent.$index, $parent.$index)"><strong>{{column.btn_txt}}</strong></button>
+              </td>
+            </tr>
+        </tbody>
   </table>
   </div>
 </div>

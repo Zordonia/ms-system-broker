@@ -61,6 +61,7 @@ app.all('/broker/mobile/:id', broker.mobile_endpoint);
 app.all('/broker/mobile/:mobileId/subscriptions', broker.subscribe_mobile_to_system);
 app.all('/broker/mobile/:mobileId/subscriptions/:systemId', broker.subscribe_mobile_to_system);
 app.all('/broker/system/:systemId/subscriptions', broker.subscribe_mobile_to_system);
+app.all('/broker/system/:systemId/subscriptions/:mobileId', broker.subscribe_mobile_to_system);
 app.all('/broker/system', broker.register_system_endpoint);
 app.all('/broker/system/:id', broker.system_endpoint);
 

@@ -6,11 +6,11 @@ angular
     'ngSanitize',
     'ngRoute',
     'ui.router',
-    'ngTable',
     'elasticsearch',
     'ngLodash',
     'angularMoment',
-    'restangular'
+    'restangular',
+    'ngTable'
   ])
   .config(function ($urlRouterProvider, $stateProvider) {
     $urlRouterProvider.otherwise('/main');
@@ -52,6 +52,16 @@ angular
           '@': {
             templateUrl: 'views/mobileRegistration.html',
             controller: 'MobileRegistrationCtrl'
+          }
+        }
+      });
+    $stateProvider
+      .state('sub', {
+        url: '/subscriptions',
+        views: {
+          '@': {
+            templateUrl: 'views/subscriptions.html',
+            controller: 'SubscriptionCtrl'
           }
         }
       });

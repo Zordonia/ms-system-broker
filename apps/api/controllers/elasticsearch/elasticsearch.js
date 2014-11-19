@@ -187,12 +187,12 @@ module.exports = {
       for (var prop in response) {
         logger.debug.write(response[prop]);
         if (response.hasOwnProperty(prop) && response[prop] && response[prop].subscribed === true) {
-          response[prop].systemId = prop;
+          response[prop].id = prop;
           subscriptions.push( response[prop] );
         }
       }
       var systemEndpoints = _.map(subscriptions, function (sub) {
-        return module.exports.getSystemEndpoint(sub.systemId).then(function (r) {
+        return module.exports.getSystemEndpoint(sub.id).then(function (r) {
           sub.system_endpoint = r;
           return sub;
         }, _.identity);
@@ -200,6 +200,11 @@ module.exports = {
       return Q.all(systemEndpoints).then(function (resp) {
         return resp;
       }, _.identity);
+    }, function (error) {
+      if (error.status === 404) {
+        return [];
+      }
+      return error;
     });
   },
   getMobileEndpoints: function (limit, offset) {
@@ -244,6 +249,38 @@ module.exports = {
         });
       }
       return response;
+    });
+  },
+  getSystemSubscriptions: function (systemId) {
+    var termQuery = { term: {} };
+    termQuery.term[systemId + '.subscribed'] = true;
+    var body = {
+      query: termQuery,
+      _source: [ '_id', 'name', systemId ]
+    };
+    logger.debug.write(body);
+    return elasticsearch.search({
+      index: 'mobile',
+      type: 'subscription',
+      body: body
+    }).then(function (resp) {
+      logger.debug.write('System subscriptions retrieved.');
+      var responseQs = [];
+      if (resp.hits && resp.hits.hits) {
+        responseQs = _.map(resp.hits.hits, function (hit) {
+          return elasticsearch.get({
+            index: 'mobile',
+            type: 'registration',
+            id: hit._id
+          }).then(function (getResponse) {
+            var res = hit._source[systemId];
+            res.id = hit._id;
+            res.name = getResponse._source.name;
+            return res;
+          }, _.identity);
+        });
+      }
+      return Q.all(responseQs);
     });
   }
 };

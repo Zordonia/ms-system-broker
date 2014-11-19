@@ -1,38 +1,74 @@
 'use strict';
 
 angular.module('serviceBrokerApp')
-.controller('MobileRegistrationCtrl',[ '$scope','config',
-  function ($scope, config) {
+.controller('MobileRegistrationCtrl',[ '$scope','config','brokerapi', 'lodash', '$timeout', 'moment',
+  function ($scope, config, brokerapi, _, timeout, moment) {
+    $scope._ = _;
+    $scope.timeout = timeout;
+    $scope.moment = moment;
+
     $scope.options = {
       types: [ { name: 'Android', id: 1 }, { name: 'iOS', id: 2 } ]
     };
 
     $scope.columns = [
-      { title: 'Device Identifier', field: 'endpointid', visible: true, filter: { endpointid: 'text' } },
+      { title: 'Device Identifier', field: 'id', visible: true, filter: { id: 'text' } },
       { title: 'Device Name', field: 'name', visible: true, filter: { name: 'text' } },
       { title: 'Device Type', field: 'type', visible: true, filter: { type: 'text' } },
       { title: 'Authentication Identification', field: 'authentication', visible: true, filter: { authentication: 'text' } },
-      { title: 'Device Position', field: 'position', visible: true, filter: { position: 'text' } },
-      { title: 'Registered Date', field: 'registeredDate', visible: true, filter: { registeredDate: 'date' } }
+      { title: 'Timestamp', field: 'timestamp', visible: true, filter: { registeredDate: 'date' } },
+      { title: 'Delete', visible: true, btn: true, btn_txt: 'Delete' }
     ];
 
     $scope.datas = [];
 
-    for (var i = 0; i < 100; i++ ){
-      var longitude = Math.random() * 180 * 2;
-      var latitude = Math.random() * 180 * 2;
-      var north = Math.random() > 0.5;
-      var east = Math.random() > 0.5;
-      $scope.datas.push({
-        endpointid: i,
-        name: 'Test Device ' + i,
-        type: Math.random() > 0.5 ? 'Android' : 'iOS',
-        authentication: '?',
-        position: '( ' + longitude + (north ? ' N ,' : ' S ,') + latitude + (east ? ' E )' : ' W )'),
-        registeredDate: new Date()
+    function searchMobile () {
+      $scope.prevData = $scope.datas;
+      console.log('Polling Mobile Registrations...' + moment().format());
+      brokerapi.mobile.getList().then(function (response) {
+        $scope.datas = response;
       });
+      timeout(searchMobile, 10000);
     }
 
-    console.log(config);
+    $scope.submit = function () {
+      var mobile = {
+        id: $scope.inputIdentifier,
+        name: $scope.inputName,
+        authentication: $scope.inputAuthentication,
+        type: $scope.inputType
+      };
+      brokerapi.mobile.post(mobile).then(function (response) {
+        $scope.latest_response = response;
+        $scope.datas.push(mobile);
+      }, function (error) {
+        $scope.error = error;
+        timeout(function () {
+          $scope.error = null;
+        }, 5000);
+      });
+    };
+
+    $scope.delete = function (index) {
+      $scope.datas[index].remove().then(function (response) {
+        $scope.latest_response = response;
+        $scope.datas.splice(index, 1);
+      }, function (error) {
+        $scope.error = error;
+        timeout(function () {
+          $scope.error = null;
+        }, 5000);
+      });
+    };
+
+    $scope.validate = function () {
+      var valid = $scope.inputIdentifier && $scope.inputIdentifier !== '';
+      valid = valid && $scope.inputName && $scope.inputName !== '';
+      valid = valid && $scope.inputAuthentication && $scope.inputAuthentication !== '';
+      valid = valid && $scope.inputType && $scope.inputType !== '';
+      return valid;
+    };
+
+    searchMobile();
   }
 ]);

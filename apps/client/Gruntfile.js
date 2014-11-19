@@ -413,8 +413,8 @@ module.exports = function (grunt) {
     'rev',
     'usemin',
     'htmlmin',
-    'test',
-    'test-e2e'
+    // 'test',
+    // 'test-e2e'
   ]);
 
   grunt.registerTask('default', [

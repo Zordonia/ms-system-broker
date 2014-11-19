@@ -1,6 +1,6 @@
 'use strict';
 
-var Q, logger, restler, url, config, elasticsearch, _;
+var Q, logger, restler, url, config, elasticsearch, moment, _;
 
 Q = require('q');
 logger = require('../../utils/logger').prefix('ELASTICSEARCH.CONTROLLER');
@@ -8,6 +8,7 @@ restler = require('restler-q');
 url = require('url');
 config = require('../../utils/config.js');
 _ = require('lodash');
+moment = require('moment');
 elasticsearch = require('../../datastore/elasticsearch.js');
 
 var validatePosition = function (position) {
@@ -70,12 +71,16 @@ module.exports = {
     }, errorHandler);
   },
   saveMobileEndpoint: function (endpoint) {
-    if (!endpoint || !endpoint.id || !endpoint.name) {
+    if (!endpoint || !endpoint.id || !endpoint.name || !endpoint.type || !endpoint.authentication) {
       var clarify = !endpoint ? 'Endpoint is not defined.' :
         !endpoint.id ? 'Must provide identifier for endpoint.' :
-          !endpoint.name ? 'Must provide name for endpoint.' : 'Unknown error occurred.';
+          !endpoint.name ? 'Must provide name for endpoint.' :
+            !endpoint.type ? 'Must provide type for endpoint.' :
+              !endpoint.authentication ? 'Must provide authentication for endpoint.' :
+                'Unknown error occurred.';
       return Q({ error: 'Mobile endpoint is not well defined.', reason: clarify });
     }
+    endpoint.timestamp = moment().format();
     return elasticsearch.index({
       index: 'mobile',
       type: 'registration',
@@ -91,6 +96,7 @@ module.exports = {
     if (endpointValid.error) {
       return Q({ error: 'System endpoint is not well defined.', reason: endpointValid.error });
     }
+    endpoint.timestamp = moment().format();
     return elasticsearch.index({
       index: 'system',
       type: 'registration',

@@ -16,6 +16,7 @@
     "json-stable-stringify": "^1.0.0",
     "lodash": "^2.4.1",
     "method-override": "~1.0.0",
+    "moment": "^2.8.3",
     "morgan": "~1.0.0",
     "q": "^1.0.1",
     "restler-q": "0.0.3",

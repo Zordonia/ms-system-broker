@@ -39,7 +39,7 @@ app.use(auth.ensureSession());
 app.use(bodyParser.json());
 
 // SQS Mobile Endpoint Consumer
-if (true || _.find(process.argv, function (arg) {
+if (_.find(process.argv, function (arg) {
   return arg === 'start_sns';
 })){
   sqsMobile = require('./controllers/pubsub/mobile_subscriber.js');

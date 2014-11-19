@@ -1,12 +1,12 @@
 <div class="page-header">
-    <h3><span></span>Mobile Endpoint Registrations</h3>
+    <h3><span></span>System Endpoint Registrations</h3>
 </div>
 <div class="row">
   <div class="col-md-2"/>
   <div class="col-md-8">
     <div class="panel panel-info">
       <!-- Mobile registration panel-->
-      <div class="panel-heading">Mobile Registration</div>
+      <div class="panel-heading">System Registration</div>
       <div class="panel-body">
         <form role="form" ng-submit="submit()">
           <!-- Name input-->
@@ -23,24 +23,37 @@
               <input ng-model="inputIdentifier" class="form-control" id="inputIdentifier" placeholder="ID">
             </div>
           </div>
-          <!-- Authenticating Information Input -->
-          <div class="form-group">
-            <label for="inputAuthentication" class="col-sm-3 control-label">Authentication</label>
-            <div class="">
-              <input ng-model="inputAuthentication" class="form-control" id="inputAuthentication" placeholder="Authentication">
+          <!-- Position Input -->
+          <div class="row">
+            <!-- Latitude -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="inputLongitude" class="col-sm-3 control-label">Longitude</label>
+                <div class="">
+                  <input ng-model="inputLongitude" class="form-control" id="inputLongitude" placeholder="Longitude">
+                </div>
+              </div>
+            </div>
+            <!-- Longitude -->
+            <div class="col-md-6">
+            <!-- Type Input -->
+              <div class="form-group">
+                <label for="inputLatitude" class="col-sm-3 control-label">Latitude</label>
+                <div class="">
+                  <input ng-model="inputLatitude" class="form-control" id="inputLatitude" placeholder="Latitude">
+                </div>
+              </div>
             </div>
           </div>
-
-          <!-- Type Input -->
+          <!-- SNS input -->
           <div class="form-group">
-            <label for="inputType" class="col-sm-3 control-label">Type</label>
-            <div class="">
-              <input ng-model="inputType" class="form-control" id="inputType" placeholder="Type">
+            <label for="inputSNS" class="col-sm-3 control-label">SNS</label>
+            <div clss="">
+              <input ng-model="inputSNS" class="form-control" id="inputSNS" placeholder="SNS ARN">
             </div>
           </div>
-
           <!-- Submit button -->
-          <button type="submit" ng-class="{ disabled: !validate() }" class="btn btn-default">Register Mobile Device</button>
+          <button type="submit" ng-class="{ disabled: !validate() }" class="btn btn-default">Register System Endpoint</button>
           <div ng-show="error" class="alert alert-danger" role="alert">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
@@ -57,7 +70,7 @@
   <div class="col-md-10">
   <table ng-table class="table" template-header="ng-table_se_header">
     <tr ng-repeat="data in datas">
-      <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field"> {{data[column.field]}}
+      <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field"> {{getFieldValue(data, column.field)}}
       <button ng-show="column.btn" ng-click="delete($parent.$index)"><strong>{{column.btn_txt}}</strong></button>
       </td>
     </tr>

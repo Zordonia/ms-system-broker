@@ -15,7 +15,8 @@
     "elasticsearch": "~2.4.3",
     "ng-lodash": "~0.0.2",
     "moment": "~2.8.3",
-    "angular-moment": "~0.8.2"
+    "angular-moment": "~0.8.2",
+    "restangular": "~1.4.0"
   },
   "devDependencies": {
     "angular-mocks": "1.2.15",

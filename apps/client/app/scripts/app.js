@@ -9,7 +9,8 @@ angular
     'ngTable',
     'elasticsearch',
     'ngLodash',
-    'angularMoment'
+    'angularMoment',
+    'restangular'
   ])
   .config(function ($urlRouterProvider, $stateProvider) {
     $urlRouterProvider.otherwise('/main');
@@ -34,6 +35,16 @@ angular
           }
         }
       });
+    $stateProvider
+    .state('sr', {
+      url: '/system-registration',
+      views: {
+        '@': {
+          templateUrl: 'views/systemRegistration.html',
+          controller: 'SystemRegistrationCtrl'
+        }
+      }
+    });
     $stateProvider
       .state('mr', {
         url: '/mobile-registration',

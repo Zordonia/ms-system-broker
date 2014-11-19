@@ -38,7 +38,7 @@ var sessionParser = function (req, res, next) {
 // Verifies that the session has been set, and is valid.
 var ensureSession = function (req, res, next) {
   var warning;
-  if (req.session && req.session.valid) {
+  if (req.session && req.session.valid || req.method.toLowerCase() === 'options') {
     logger.info.write('Token accepted, session is valid.');
     next();
   }
@@ -49,6 +49,7 @@ var ensureSession = function (req, res, next) {
       method: req.method,
       body: req.body
     };
+    logger.error.write(warning);
     res.json(401, warning);
   }
 };

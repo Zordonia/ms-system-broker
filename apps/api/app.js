@@ -2,7 +2,7 @@
 
 var express, app, logger, compression,
   methodOverride, config, auth, allowCrossOrigin, url, bodyParser,
-  sqsMobile, sqsSystem, _;
+  sqsMobile, sqsSystem, _, config;
 
 // Create express application
 express = require('express');
@@ -17,6 +17,7 @@ config = require('./utils/config.js');
 auth = require('./middleware/auth.js');
 bodyParser = require('body-parser');
 _ = require('lodash');
+var debug = false;
 
 // CORS
 allowCrossOrigin = require('./middleware/cors');
@@ -40,10 +41,14 @@ app.use(bodyParser.json());
 
 // SQS Mobile Endpoint Consumer
 if (_.find(process.argv, function (arg) {
-  return arg === 'start_sns';
+  return arg === 'd';
 })){
+  debug = true;
+}
+
+if (!debug){
   sqsMobile = require('./controllers/pubsub/mobile_subscriber.js');
-  sqsMobile.start();
+  sqsMobile.start(0);
 
   // SQS Mobile Endpoint Consumer
   sqsSystem = require('./controllers/pubsub/system_endpoint_subscriber.js');
@@ -55,15 +60,35 @@ var broker;
 broker = require('./controllers/broker.js');
 
 // Set up API calls
-app.all('/broker/', broker.base);
-app.all('/broker/mobile', broker.register_mobile_endpoint);
-app.all('/broker/mobile/:id', broker.mobile_endpoint);
-app.all('/broker/mobile/:mobileId/subscriptions', broker.subscribe_mobile_to_system);
-app.all('/broker/mobile/:mobileId/subscriptions/:systemId', broker.subscribe_mobile_to_system);
-app.all('/broker/system/:systemId/subscriptions', broker.subscribe_mobile_to_system);
-app.all('/broker/system/:systemId/subscriptions/:mobileId', broker.subscribe_mobile_to_system);
-app.all('/broker/system', broker.register_system_endpoint);
-app.all('/broker/system/:id', broker.system_endpoint);
+app.get('/broker/', broker.base);
+app.get('/broker/mobile', broker.register_mobile_endpoint);
+app.get('/broker/mobile/:id', broker.mobile_endpoint);
+app.get('/broker/mobile/:mobileId/subscriptions', broker.subscribe_mobile_to_system);
+app.get('/broker/mobile/:mobileId/subscriptions/:systemId', broker.subscribe_mobile_to_system);
+app.get('/broker/system/:systemId/subscriptions', broker.subscribe_mobile_to_system);
+app.get('/broker/system/:systemId/subscriptions/:mobileId', broker.subscribe_mobile_to_system);
+app.get('/broker/system', broker.register_system_endpoint);
+app.get('/broker/system/:id', broker.system_endpoint);
+
+app.post('/broker/', broker.base);
+app.post('/broker/mobile', broker.register_mobile_endpoint);
+app.post('/broker/mobile/:id', broker.mobile_endpoint);
+app.post('/broker/mobile/:mobileId/subscriptions', broker.subscribe_mobile_to_system);
+app.post('/broker/mobile/:mobileId/subscriptions/:systemId', broker.subscribe_mobile_to_system);
+app.post('/broker/system/:systemId/subscriptions', broker.subscribe_mobile_to_system);
+app.post('/broker/system/:systemId/subscriptions/:mobileId', broker.subscribe_mobile_to_system);
+app.post('/broker/system', broker.register_system_endpoint);
+app.post('/broker/system/:id', broker.system_endpoint);
+
+app.del('/broker/', broker.base);
+app.del('/broker/mobile', broker.register_mobile_endpoint);
+app.del('/broker/mobile/:id', broker.mobile_endpoint);
+app.del('/broker/mobile/:mobileId/subscriptions', broker.subscribe_mobile_to_system);
+app.del('/broker/mobile/:mobileId/subscriptions/:systemId', broker.subscribe_mobile_to_system);
+app.del('/broker/system/:systemId/subscriptions', broker.subscribe_mobile_to_system);
+app.del('/broker/system/:systemId/subscriptions/:mobileId', broker.subscribe_mobile_to_system);
+app.del('/broker/system', broker.register_system_endpoint);
+app.del('/broker/system/:id', broker.system_endpoint);
 
 app.all('/', function (req, res) {
   res.json({

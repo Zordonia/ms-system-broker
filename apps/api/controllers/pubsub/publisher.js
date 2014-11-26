@@ -29,10 +29,12 @@ module.exports = function (sns_topic_arn) {
         message: content
       });
       return deferred.promise.then( function (result) {
-        logger.error.write(_sns);
         return Q.nfcall(sns.publish.bind(sns), {
           TopicArn: _sns,
           Message: JSON.stringify(result)
+        }).then(_.identity, function (error) {
+          logger.error.write(error);
+          return error;
         });
       });
     }

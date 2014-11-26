@@ -2,6 +2,6 @@
 
 angular.module('serviceBrokerApp').service('es', function (esFactory) {
   return esFactory({
-    host: 'localhost:9200'
+    host: '54.68.156.164:9200'
   });
 });

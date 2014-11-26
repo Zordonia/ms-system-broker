@@ -10,6 +10,11 @@ _ = require('lodash');
 gpsDistance = require('gps-distance');
 
 var withinRadius = function (se_radius, se_position, me_position) {
+  se_position.longitude = parseFloat(se_position.longitude);
+  se_position.latitude = parseFloat(se_position.latitude);
+
+  me_position.longitude = parseFloat(me_position.longitude);
+  me_position.latitude = parseFloat(me_position.latitude);
   var dKM = gpsDistance(se_position.longitude, se_position.latitude, me_position.longitude, me_position.latitude);
   var distance_meters = dKM * 1000;
   // Distance must be within 10% of radius

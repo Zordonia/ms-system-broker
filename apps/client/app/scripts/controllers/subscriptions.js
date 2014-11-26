@@ -17,7 +17,7 @@ angular.module('serviceBrokerApp')
         $scope.system_endpoints = response;
       });
 
-      timeout(retrieveEndpoints, 10000);
+      timeout(retrieveEndpoints, 30000);
     }
 
     $scope.selectME = function (index) {

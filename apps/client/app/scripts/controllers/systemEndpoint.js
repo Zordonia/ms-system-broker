@@ -39,6 +39,7 @@ angular.module('serviceBrokerApp')
       console.log('Polling Elastic Search.');
       es.search({
         index: 'system',
+        type: 'message',
         body: query
       }, function (error, response) {
         if (response) {
@@ -52,7 +53,7 @@ angular.module('serviceBrokerApp')
             };
           });
         }
-        timeout(searchES, 1000);
+        timeout(searchES, 30000);
       });
     }
     searchES();

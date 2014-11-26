@@ -120,6 +120,7 @@ module.exports.subscribe_mobile_to_system = function (req, res) {
       }
       break;
     default:
+    case 'options':
     case 'get':
       logger.debug.write('Retrieving endpoint subscriptions.');
       // Get one subscription

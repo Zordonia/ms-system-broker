@@ -63,7 +63,7 @@ angular.module('serviceBrokerApp')
     function search () {
       $scope.prevData = $scope.datas;
       $scope.tableParams.reload();
-      timeout(search, 1000);
+      timeout(search, 30000);
     }
 
     $scope.submit = function () {

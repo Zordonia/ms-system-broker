@@ -126,6 +126,5 @@
   "disallowTrailingWhitespace": true,
   "requireKeywordsOnNewLine": [
     "else"
-  ],
-  "requireCapitalizedConstructors": true
+  ]
 }

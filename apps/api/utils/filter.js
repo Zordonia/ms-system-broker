@@ -23,18 +23,25 @@ var withinRadius = function (se_radius, se_position, me_position) {
   return { valid: valid, reason: reason };
 };
 
-module.exports.filterMobilePublication = function (message) {
+module.exports.filterMobilePublication = function (message, prev_message) {
   return elasticsearch.getMobileSubscriptions(message.mobileId)
     .then(function (subscriptions) {
       subscriptions = _.filter(subscriptions, function (sub) {
         var readyToSend = true && sub.system_endpoint.sns;
-        var reason = readyToSend ? ' SNS Endpoint not defined on system endpoint.' : '';
+        var reason = !readyToSend ? ' SNS Endpoint not defined on system endpoint.' : '';
         var calcDist = withinRadius(sub.radius, sub.system_endpoint.position, message.position);
         reason = reason + calcDist.reason;
         readyToSend = readyToSend && calcDist.valid;
-        logger.debug.write('Mobile publication recieved. Publication will ' +
-          (readyToSend ? '' : 'not ') + 'be sent to system id ' + sub.systemId + '.' +
-            (readyToSend ? '' : ' Reason:' + reason ));
+        /*
+        * We're able to send to the system endpoint if the previous position was outside the radius,
+        * and the current position is inside the radius.
+        */
+        var calcPreviousDist = withinRadius(sub.radius, sub.system_endpoint.position, prev_message.position);
+        reason = reason + calcPreviousDist.reason;
+        readyToSend = readyToSend && !calcPreviousDist.valid;
+        logger.debug.write('Mobile publication recieved.\r\nPublication will ' +
+          (readyToSend ? '' : 'not ') + 'be sent to system id ' + (sub.system_endpoint && sub.system_endpoint.id) + '.' +
+            (readyToSend ? '' : '\r\nReason:' + reason ));
         return readyToSend;
       });
       return subscriptions;

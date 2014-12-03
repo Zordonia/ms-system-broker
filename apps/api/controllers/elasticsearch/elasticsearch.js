@@ -58,6 +58,35 @@ module.exports = {
       return resp;
     }, errorHandler);
   },
+  getPrevMobileMessage: function (message) {
+    logger.info.write('Retrieving previous mobile message: ' + message.id + '_' + message.timestamp);
+    return elasticsearch.search({
+      index: 'mobile',
+      type: 'message',
+      body: {
+        query: {
+          bool: {
+            must_not: {
+              term: {
+                timestamp: message.timestamp
+              }
+            },
+            must: {
+              term: {
+                id: message.id
+              }
+            }
+          }
+        }
+      },
+      size: 1,
+      from: 0,
+      sort: 'timestamp:desc'
+    }).then( function (resp) {
+      logger.info.write('Mobile message retrieved.');
+      return resp.hits.hits && resp.hits.hits[0] && resp.hits.hits[0]._source;
+    }, errorHandler);
+  },
   saveSystemMessage: function (message) {
     logger.info.write('Storing system message: ' + message.id + '_' + message.timestamp);
     return elasticsearch.index({

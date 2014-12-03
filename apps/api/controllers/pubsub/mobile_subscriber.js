@@ -53,13 +53,14 @@ processMessage = function (message) {
   }
   var receipt;
   receipt = message.ReceiptHandle;
-  elasticsearch.saveMobileMessage(messageJSON).
+  Q.all([ elasticsearch.saveMobileMessage(messageJSON),
+  elasticsearch.getPrevMobileMessage(messageJSON) ]).
     then(function (result) {
-      filter.filterMobilePublication(messageJSON).then(function (systemResults) {
+      filter.filterMobilePublication(messageJSON, result && result[1]).then(function (systemResults) {
         var results = _.map(systemResults, function (sys) {
           return require('./publisher.js')(sys.system_endpoint.sns).publish(message.Body)
             .then( function () {
-              logger.debug.write('Message processed: ' + JSON.stringify(result));
+              logger.debug.write('Message processed: ' + JSON.stringify(result[0]));
             },
             function (err) {
               logger.error.write(err);
